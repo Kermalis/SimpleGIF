@@ -19,7 +19,7 @@ namespace Kermalis.SimpleGIF.Decoding
             {
                 throw GifHelpers.InvalidBlockSizeException("Application Extension", 11, BlockSize);
             }
-            ApplicationIdentifier = r.ReadString(8);
+            ApplicationIdentifier = r.ReadString(8, true);
             AuthenticationCode = r.ReadBytes(3);
             Data = GifHelpers.ReadDataBlocks(r);
         }

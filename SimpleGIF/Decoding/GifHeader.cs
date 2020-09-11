@@ -12,12 +12,12 @@ namespace Kermalis.SimpleGIF.Decoding
 
         internal GifHeader(EndianBinaryReader r)
         {
-            Signature = r.ReadString(3);
+            Signature = r.ReadString(3, false);
             if (Signature != "GIF")
             {
                 throw GifHelpers.InvalidSignatureException(Signature);
             }
-            Version = r.ReadString(3);
+            Version = r.ReadString(3, false);
             if (Version != "87a" && Version != "89a")
             {
                 throw GifHelpers.UnsupportedVersionException(Version);

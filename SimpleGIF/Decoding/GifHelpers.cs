@@ -47,7 +47,7 @@ namespace Kermalis.SimpleGIF.Decoding
         {
             if (ext.Data.Length >= 3)
             {
-                return BitConverter.ToUInt16(ext.Data, 1);
+                return (ushort)EndianBitConverter.BytesToInt16(ext.Data, 1, Endianness.LittleEndian);
             }
             return 1;
         }
