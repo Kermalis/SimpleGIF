@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 
 namespace Kermalis.SimpleGIF
 {
@@ -6,9 +7,11 @@ namespace Kermalis.SimpleGIF
     {
         public sealed class Frame
         {
+            /// <summary>Modifying this <see cref="Array"/> will not affect any other frames.
+            /// This is the only <see cref="object"/> exposed to changes because it doesn't affect the library.</summary>
             public uint[] Bitmap { get; }
-            /// <summary>Delay in milliseconds. -1 if it stays forever.</summary>
-            public int Delay { get; }
+            /// <summary>Delay in milliseconds. <see langword="null"/> if it stays forever.</summary>
+            public int? Delay { get; }
 
             internal Frame(uint[] toClone, int? delay)
             {
@@ -16,7 +19,7 @@ namespace Kermalis.SimpleGIF
                 if (delay.HasValue)
                 {
                     int d = delay.Value;
-                    Delay = d == 0 ? -1 : d;
+                    Delay = d == 0 ? null : d;
                 }
                 else
                 {

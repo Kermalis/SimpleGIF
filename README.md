@@ -5,7 +5,7 @@
 * You can use this library to convert the decompressed bitmap to a regular bitmap of a specific pixel format, so you don't need to do any drawing yourself
 * You can browse the GIF contents through objects without doing any drawing
 
-This library uses .NET Standard 2.0.
+This library uses .NET 5.0.
 
 ----
 # SimpleGIF uses:

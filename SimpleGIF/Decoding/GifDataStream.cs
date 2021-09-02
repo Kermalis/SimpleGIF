@@ -8,7 +8,8 @@ namespace Kermalis.SimpleGIF.Decoding
     public sealed class GifDataStream
     {
         public GifHeader Header { get; }
-        public GifColor[] GlobalColorTable { get; }
+        /// <summary><see langword="null"/> if <code>Header.LogicalScreenDescriptor.HasGlobalColorTable</code> is <see langword="false"/>.</summary>
+        public GifColor[]? GlobalColorTable { get; }
         public ReadOnlyCollection<GifFrame> Frames { get; }
         public ReadOnlyCollection<GifExtension> Extensions { get; }
         public ushort RepeatCount { get; }
@@ -65,8 +66,8 @@ namespace Kermalis.SimpleGIF.Decoding
             Frames = frames.AsReadOnly();
             Extensions = specialExtensions.AsReadOnly();
 
-            GifApplicationExtension netscapeExtension = Extensions.OfType<GifApplicationExtension>().FirstOrDefault(GifHelpers.IsNetscapeExtension);
-            RepeatCount = netscapeExtension != null ? GifHelpers.GetRepeatCount(netscapeExtension) : (ushort)1;
+            GifApplicationExtension? netscapeExtension = Extensions.OfType<GifApplicationExtension>().FirstOrDefault(GifHelpers.IsNetscapeExtension);
+            RepeatCount = netscapeExtension is not null ? GifHelpers.GetRepeatCount(netscapeExtension) : (ushort)1;
         }
     }
 }

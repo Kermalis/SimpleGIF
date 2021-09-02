@@ -81,28 +81,21 @@ namespace Kermalis.SimpleGIF
         public static GifPalette[] CreatePalettes(GifDataStream gif)
         {
             var palettes = new GifPalette[gif.Frames.Count];
-            GifColor[] globalColorTable = null;
-            if (gif.Header.LogicalScreenDescriptor.HasGlobalColorTable)
-            {
-                globalColorTable = gif.GlobalColorTable;
-            }
+            GifColor[]? globalColorTable = gif.GlobalColorTable;
 
             for (int i = 0; i < gif.Frames.Count; i++)
             {
                 GifFrame frame = gif.Frames[i];
-                GifColor[] colorTable = frame.Descriptor.HasLocalColorTable ? frame.LocalColorTable : globalColorTable;
+                GifColor[] colorTable = frame.LocalColorTable ?? globalColorTable!;
 
-                GifGraphicControlExtension gce = frame.GraphicControl;
-                int transparencyIndex = gce != null && gce.HasTransparency ? gce.TransparencyIndex : -1;
-
-                palettes[i] = new GifPalette(transparencyIndex, colorTable);
+                palettes[i] = new GifPalette(frame.GraphicControl?.TransparencyIndex, colorTable);
             }
 
             return palettes;
         }
 
         public static unsafe DecodedGIF.Frame RenderFrame(GifDataStream gif, IReadOnlyList<IReadOnlyList<byte>> decompressedFrames, GifPalette[] pals, int frameIndex,
-            int canvasWidth, int canvasHeight, ColorFormat colorFormat, ref uint[] canvas, ref GifFrame prevFrame, ref int prevFrameIndex, ref uint[] prevFrameBuffer)
+            int canvasWidth, int canvasHeight, ColorFormat colorFormat, ref uint[] canvas, ref GifFrame? prevFrame, ref int prevFrameIndex, ref uint[] prevFrameBuffer)
         {
             GifFrame frame = gif.Frames[frameIndex];
             GifImageDescriptor desc = frame.Descriptor;
@@ -135,7 +128,7 @@ namespace Kermalis.SimpleGIF
 
             return new DecodedGIF.Frame(canvas, frame.GraphicControl?.Delay);
         }
-        public static unsafe DecodedGIF RenderFrames(GifDataStream gif, IReadOnlyList<IReadOnlyList<byte>> decompressedFrames, ColorFormat colorFormat)
+        public static DecodedGIF RenderFrames(GifDataStream gif, IReadOnlyList<IReadOnlyList<byte>> decompressedFrames, ColorFormat colorFormat)
         {
             GifLogicalScreenDescriptor gifDesc = gif.Header.LogicalScreenDescriptor;
             int canvasWidth = gifDesc.Width;
@@ -143,7 +136,7 @@ namespace Kermalis.SimpleGIF
             uint[] canvas = new uint[canvasWidth * canvasHeight];
             GifPalette[] pals = CreatePalettes(gif);
             int prevFrameIndex = 0;
-            GifFrame prevFrame = null;
+            GifFrame? prevFrame = null;
             uint[] prevFrameBuffer = new uint[canvasWidth * canvasHeight];
             var outSprites = new DecodedGIF.Frame[gif.Frames.Count];
             for (int frameIndex = 0; frameIndex < gif.Frames.Count; frameIndex++)
@@ -187,10 +180,10 @@ namespace Kermalis.SimpleGIF
         {
             return new Int32Rect(r.Left, r.Top, Math.Min(r.Width, canvasWidth - r.Left), Math.Min(r.Height, canvasHeight - r.Top));
         }
-        public static unsafe void DisposePreviousFrame(GifFrame currentFrame, GifFrame prevFrame, int canvasWidth, int canvasHeight, ref uint[] canvas, ref uint[] prevFrameBuffer)
+        public static unsafe void DisposePreviousFrame(GifFrame currentFrame, GifFrame? prevFrame, int canvasWidth, int canvasHeight, ref uint[] canvas, ref uint[] prevFrameBuffer)
         {
-            GifGraphicControlExtension pgce = prevFrame?.GraphicControl;
-            if (pgce != null)
+            GifGraphicControlExtension? pgce = prevFrame?.GraphicControl;
+            if (pgce is not null)
             {
                 switch (pgce.DisposalMethod)
                 {
@@ -204,7 +197,7 @@ namespace Kermalis.SimpleGIF
                     {
                         fixed (uint* bmpAddress = canvas)
                         {
-                            ClearArea(bmpAddress, canvasWidth, canvasHeight, GetFixedUpFrameRect(canvasWidth, canvasHeight, prevFrame.Descriptor));
+                            ClearArea(bmpAddress, canvasWidth, canvasHeight, GetFixedUpFrameRect(canvasWidth, canvasHeight, prevFrame!.Descriptor));
                         }
                         break;
                     }
@@ -216,8 +209,8 @@ namespace Kermalis.SimpleGIF
                 }
             }
 
-            GifGraphicControlExtension gce = currentFrame.GraphicControl;
-            if (gce != null && gce.DisposalMethod == GifFrameDisposalMethod.RestorePrevious)
+            GifGraphicControlExtension? gce = currentFrame.GraphicControl;
+            if (gce is not null && gce.DisposalMethod == GifFrameDisposalMethod.RestorePrevious)
             {
                 Buffer.BlockCopy(canvas, 0, prevFrameBuffer, 0, canvas.Length * sizeof(uint));
             }

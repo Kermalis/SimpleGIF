@@ -10,9 +10,9 @@ namespace Kermalis.SimpleGIF.Decoding
         public int BlockSize { get; }
         public GifFrameDisposalMethod DisposalMethod { get; }
         public bool UserInput { get; }
-        public bool HasTransparency { get; }
         public int Delay { get; }
-        public int TransparencyIndex { get; }
+        /// <summary><see langword="null"/> if there is no transparency.</summary>
+        public int? TransparencyIndex { get; }
 
         internal GifGraphicControlExtension(EndianBinaryReader r)
         {
@@ -24,9 +24,13 @@ namespace Kermalis.SimpleGIF.Decoding
             byte packedFields = r.ReadByte();
             DisposalMethod = (GifFrameDisposalMethod)((packedFields & 0x1C) >> 2);
             UserInput = (packedFields & 0x02) != 0;
-            HasTransparency = (packedFields & 0x01) != 0;
+            bool hasTransparency = (packedFields & 0x01) != 0;
             Delay = r.ReadUInt16() * 10;
-            TransparencyIndex = r.ReadByte();
+            TransparencyIndex = r.ReadByte(); // Still consume byte even if it won't be used
+            if (!hasTransparency)
+            {
+                TransparencyIndex = null;
+            }
             r.ReadByte(); // Block terminator
         }
     }

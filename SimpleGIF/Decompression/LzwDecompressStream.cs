@@ -83,14 +83,15 @@ namespace Kermalis.SimpleGIF.Decompression
             public bool IsStopCode { get; }
 
             public Sequence(byte[] bytes)
-                : this()
             {
                 Bytes = bytes;
+                IsClearCode = false;
+                IsStopCode = false;
             }
 
             private Sequence(bool isClearCode, bool isStopCode)
-                : this()
             {
+                Bytes = null!; // Not using for these two codes
                 IsClearCode = isClearCode;
                 IsStopCode = isStopCode;
             }

@@ -1,18 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Kermalis.SimpleGIF</RootNamespace>
-    <Authors>Kermalis</Authors>
-    <Copyright>Kermalis</Copyright>
-    <RepositoryUrl>https://github.com/Kermalis/SimpleGIF</RepositoryUrl>
-    <OutputPath>..\Build\</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Kermalis.SimpleGIF</RootNamespace>
+		<Authors>Kermalis</Authors>
+		<Copyright>Kermalis</Copyright>
+		<RepositoryUrl>https://github.com/Kermalis/SimpleGIF</RepositoryUrl>
+		<DocumentationFile>..\Build\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+		<OutputPath>..\Build\</OutputPath>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<NoWarn>1591</NoWarn>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="EndianBinaryIO" Version="1.1.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="EndianBinaryIO" Version="1.1.2" />
+	</ItemGroup>
 
 </Project>

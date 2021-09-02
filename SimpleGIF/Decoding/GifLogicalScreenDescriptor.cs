@@ -11,7 +11,7 @@ namespace Kermalis.SimpleGIF.Decoding
         public bool IsGlobalColorTableSorted { get; }
         public int GlobalColorTableSize { get; }
         public int BackgroundColorIndex { get; }
-        public double PixelAspectRatio { get; }
+        public float PixelAspectRatio { get; }
 
         int IGifRect.Left => 0;
         int IGifRect.Top => 0;
@@ -27,7 +27,7 @@ namespace Kermalis.SimpleGIF.Decoding
             GlobalColorTableSize = 1 << ((b & 0x07) + 1);
             BackgroundColorIndex = r.ReadByte();
             b = r.ReadByte();
-            PixelAspectRatio = b == 0 ? 0d : (15 + b) / 64d;
+            PixelAspectRatio = b == 0 ? 0f : (15 + b) / 64f;
         }
     }
 }

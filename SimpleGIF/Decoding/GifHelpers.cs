@@ -40,8 +40,7 @@ namespace Kermalis.SimpleGIF.Decoding
 
         public static bool IsNetscapeExtension(GifApplicationExtension ext)
         {
-            return ext.ApplicationIdentifier == "NETSCAPE"
-                && GetString(ext.AuthenticationCode) == "2.0";
+            return ext.ApplicationIdentifier == "NETSCAPE" && GetString(ext.AuthenticationCode) == "2.0";
         }
         public static ushort GetRepeatCount(GifApplicationExtension ext)
         {

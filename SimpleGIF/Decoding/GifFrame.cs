@@ -11,10 +11,10 @@ namespace Kermalis.SimpleGIF.Decoding
         internal override GifBlockKind Kind => GifBlockKind.GraphicRendering;
 
         public GifImageDescriptor Descriptor { get; }
-        public GifColor[] LocalColorTable { get; }
+        public GifColor[]? LocalColorTable { get; }
         public ReadOnlyCollection<GifExtension> Extensions { get; }
         public GifImageData ImageData { get; }
-        public GifGraphicControlExtension GraphicControl { get; }
+        public GifGraphicControlExtension? GraphicControl { get; }
 
         internal GifFrame(EndianBinaryReader r, IEnumerable<GifExtension> controlExtensions)
         {
@@ -25,7 +25,7 @@ namespace Kermalis.SimpleGIF.Decoding
             }
             ImageData = new GifImageData(r);
             Extensions = controlExtensions.ToList().AsReadOnly();
-            GraphicControl = Extensions.OfType<GifGraphicControlExtension>().FirstOrDefault();
+            GraphicControl = Extensions.OfType<GifGraphicControlExtension>().LastOrDefault();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Kermalis.SimpleGIF.Decoding
     /// <summary>These tell the GifColor how to be written to the output bitmaps.
     /// Each color will take 8 bits (one byte), resulting in one uint being used.
     /// The letters are arranged in order of low to high bit significance.
-    /// For example, <see cref="ColorFormat.ARGB"/> will have A as the least significant byte and B as the most significant byte.</summary>
+    /// For example, <see cref="ARGB"/> will have A as the least significant byte and B as the most significant byte.</summary>
     public enum ColorFormat
     {
         ABGR,
@@ -18,11 +18,11 @@ namespace Kermalis.SimpleGIF.Decoding
     }
     public sealed class GifPalette
     {
-        /// <summary>-1 means there is no transparency in this palette.</summary>
-        public int TransparencyIndex { get; }
+        /// <summary><see langword="null"/> if there is no transparency in this <see cref="GifPalette"/>.</summary>
+        public int? TransparencyIndex { get; }
         public ReadOnlyCollection<GifColor> Colors { get; }
 
-        internal GifPalette(int transparencyIndex, GifColor[] colors)
+        internal GifPalette(int? transparencyIndex, GifColor[] colors)
         {
             TransparencyIndex = transparencyIndex;
             Colors = new ReadOnlyCollection<GifColor>(colors);

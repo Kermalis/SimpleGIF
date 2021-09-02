@@ -18,7 +18,6 @@
             // It's probably safe to assume it will always be the case, because:
             // - Windows only supports little-endian architectures: x86/x64 and ARM (which supports
             //   both endiannesses, but Windows on ARM is always in little-endian mode)
-            // - No platforms other than Windows support XAML applications
             // If the situation changes, this code will have to be updated.
 
             if (_bytePosition == -1)
